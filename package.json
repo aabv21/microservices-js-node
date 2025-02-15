@@ -1,0 +1,24 @@
+{
+  "name": "master-miscroservices-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ecosystem.config.cjs",
+  "type": "module",
+  "scripts": {
+    "start": "pm2 start ecosystem.config.cjs",
+    "dev": "pm2 start ecosystem.config.cjs --env development",
+    "prod": "pm2 start ecosystem.config.cjs --env production"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "mongodb": "^6.13.0",
+    "mongoose": "^8.10.0",
+    "pm2": "^5.3.0",
+    "nodemon": "^3.1.1"
+  },
+  "author": "",
+  "license": "ISC"
+}
