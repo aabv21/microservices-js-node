@@ -1,22 +1,23 @@
 import { Router } from "express";
 
-import logger from "./middlewares/log.js";
+// Controllers
 import {
   getPost,
   getPosts,
   createPost,
   updatePost,
-  patchPost,
   deletePost,
 } from "../controllers/posts.js";
 
+// Middlewares
+import { isLoggedIn } from "./middlewares/isLoggedIn.js";
+
 const router = Router();
 
-router.get("/", getPosts);
-router.get("/:id", getPost);
-router.post("/", logger, createPost);
-router.put("/:id", updatePost);
-router.patch("/:id", patchPost);
-router.delete("/:id", deletePost);
+router.get("/", isLoggedIn, getPosts);
+router.get("/:id", isLoggedIn, getPost);
+router.post("/", isLoggedIn, createPost);
+router.put("/:id", isLoggedIn, updatePost);
+router.delete("/:id", isLoggedIn, deletePost);
 
 export default router;

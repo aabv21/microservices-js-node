@@ -7,11 +7,12 @@ class PassCrypt {
   #keyLength = 64;
   #digest = "sha256";
 
-  // constructor(password) {
-  //   this.password = password;
-  // }
+  #checkSalt() {
+    this.#salt === null ? (this.#salt = randomBytes(32).toString("hex")) : null;
+  }
 
   hashPassword(password) {
+    this.#checkSalt();
     const hashedPassword = pbkdf2Sync(
       password,
       this.#salt,
@@ -20,14 +21,15 @@ class PassCrypt {
       this.#digest
     ).toString("hex");
 
-    this.#password = hashedPassword;
-    return `${this.#salt}:${hashedPassword}`;
+    this.#password = `${this.#salt}:${hashedPassword}`;
+    this.#salt = null;
+    return this.#password;
   }
 
-  verifyPassword(password, DBpassword) {
+  verify(password, DBpassword) {
     this.#salt = DBpassword.split(":")[0];
     const newHashedPassword = this.hashPassword(password);
-    return newHashedPassword === DBpassword;
+    return Object.is(newHashedPassword, DBpassword);
   }
 }
 

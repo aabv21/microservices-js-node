@@ -1,12 +1,20 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const Post = require("./posts");
+import Post from "./posts.js";
 
 const commentSchema = new mongoose.Schema(
   {
     content: String,
-    author: Object,
-    post: { ref: "Post", type: mongoose.Schema.Types.ObjectId, required: true },
+    author: {
+      ref: "User",
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
+    post: {
+      ref: "Post",
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
   },
   { timestamps: true }
 );
@@ -17,6 +25,7 @@ commentSchema.post("save", async function (doc) {
   });
 });
 
-const Comment = mongoose.model("Comment", commentSchema);
+Comment.ensureIndexes();
+Comment.syncIndexes();
 
 export default Comment;

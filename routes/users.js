@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { canAccess } from "./middlewares/canAccess.js";
 import {
   getUsers,
   getUser,
@@ -10,11 +11,11 @@ import {
 
 const router = Router();
 
-router.get("/", getUsers);
-router.get("/:id", getUser);
-router.post("/", createUser);
-router.put("/:id", updateUser);
-router.patch("/:id", patchUser);
-router.delete("/:id", deleteUser);
+router.get("/", canAccess, getUsers);
+router.get("/:id", canAccess, getUser);
+router.post("/", validateUser, createUser);
+router.put("/:id", canAccess, updateUser);
+router.patch("/:id", canAccess, patchUser);
+router.delete("/:id", canAccess, deleteUser);
 
 export default router;

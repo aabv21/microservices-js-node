@@ -3,16 +3,15 @@ import passCrypt from "../utils/passCrypt.js";
 
 /**
  * @async
- * @function
+ * @function getUsers
  * @access public
  * @route GET /api/v1/users
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
- * @param {Function} next - The next middleware function.
  * @throws {Error} - If the users are not found.
  * @returns {Promise<void>}
  */
-export const getUsers = async (req, res, next) => {
+export const getUsers = async (req, res) => {
   const users = await User.find();
 
   try {
@@ -34,7 +33,7 @@ export const getUsers = async (req, res, next) => {
 
 /**
  * @async
- * @function
+ * @function getUser
  * @access public
  * @route GET /api/v1/users/:id
  * @param {Object} req - The request object.
@@ -43,7 +42,8 @@ export const getUsers = async (req, res, next) => {
  * @returns {Promise<void>}
  */
 export const getUser = async (req, res) => {
-  const user = await User.findById(req.params.id);
+  const userId = req.params.id;
+  const user = await User.findById(userId);
 
   if (!user) {
     return res.status(404).json({
@@ -63,7 +63,7 @@ export const getUser = async (req, res) => {
 
 /**
  * @async
- * @function
+ * @function createUser
  * @access public
  * @route POST /api/v1/users
  * @param {Object} req - The request object.
@@ -72,9 +72,10 @@ export const getUser = async (req, res) => {
  * @returns {Promise<void>}
  */
 export const createUser = async (req, res) => {
-  // const query = req.query;
-  // const params = req.params;
   const data = req.body;
+
+  // Validate the user data
+  Object.assign(data, validateUser);
 
   try {
     await User.create(data);
@@ -95,20 +96,38 @@ export const createUser = async (req, res) => {
 
 /**
  * @async
- * @function
+ * @function updateUser
  * @access public
  * @route PUT /api/v1/users/:id
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
- * @param {Function} next - The next middleware function.
- * @throws {Error} - If the user is not updated.
  * @returns {Promise<void>}
  */
-export const updateUser = async (req, res, next) => {
-  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+export const updateUser = async (req, res) => {
+  const data = req.body;
+  const userId = req.params.id;
+
+  // is userId is not the same as the userId in the request
+  if (req.user._id !== userId) {
+    return res.status(401).json({
+      success: false,
+      msg: "You are not allowed to update this user",
+      method: "PUT",
+    });
+  }
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      msg: "User not found",
+      method: "PUT",
+    });
+  }
+
+  user.set(data);
+  await user.save();
 
   if (!user) {
     return res.status(404).json({
@@ -128,20 +147,39 @@ export const updateUser = async (req, res, next) => {
 
 /**
  * @async
- * @function
+ * @function patchUser
  * @access public
  * @route PATCH /api/v1/users/:id
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
- * @param {Function} next - The next middleware function.
  * @throws {Error} - If the user is not patched.
  * @returns {Promise<void>}
  */
 export const patchUser = async (req, res) => {
-  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const data = req.body;
+  const userId = req.params.id;
+
+  // is userId is not the same as the userId in the request
+  if (req.user._id !== userId) {
+    return res.status(401).json({
+      success: false,
+      msg: "You are not allowed to patch this user",
+      method: "PATCH",
+    });
+  }
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      msg: "User not found",
+      method: "PATCH",
+    });
+  }
+
+  user.set(data);
+  await user.save();
 
   if (!user) {
     return res.status(404).json({
@@ -161,17 +199,27 @@ export const patchUser = async (req, res) => {
 
 /**
  * @async
- * @function
+ * @function deleteUser
  * @access public
  * @route DELETE /api/v1/users/:id
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
- * @param {Function} next - The next middleware function.
  * @throws {Error} - If the user is not deleted.
  * @returns {Promise<void>}
  */
 export const deleteUser = async (req, res) => {
-  const user = await User.findByIdAndDelete(req.params.id);
+  const userId = req.params.id;
+
+  // is userId is not the same as the userId in the request
+  if (req.user._id !== userId) {
+    return res.status(401).json({
+      success: false,
+      msg: "You are not allowed to delete this user",
+      method: "DELETE",
+    });
+  }
+
+  const user = await User.findById(userId);
 
   if (!user) {
     return res.status(404).json({
@@ -181,10 +229,12 @@ export const deleteUser = async (req, res) => {
     });
   }
 
+  await user.deleteOne();
+
   res.status(200).json({
     success: true,
     data: [],
-    msg: "User deleted successfully",
+    msg: `User ${userId} deleted successfully`,
     method: "DELETE",
   });
 };
