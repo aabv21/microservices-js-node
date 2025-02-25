@@ -1,14 +1,13 @@
 import { createClient } from "redis";
 
+const username = process.env.REDIS_USERNAME;
+const password = process.env.REDIS_PASSWORD;
+const host = process.env.REDIS_HOST;
+const port = process.env.REDIS_PORT;
+const config = { username, password, socket: { host, port } };
+
 // Client
-const redisClient = createClient({
-  username: "default",
-  password: "2JVwsfLaxIj85crBbm3XRCSmZcl88Q5h",
-  socket: {
-    host: "redis-14080.c14.us-east-1-3.ec2.redns.redis-cloud.com",
-    port: 14080,
-  },
-});
+const redisClient = createClient(config);
 redisClient.on("error", (err) => console.log("Redis Client Error", err));
 redisClient.on("ready", () => console.log("Redis Client Ready"));
 await redisClient.connect();
@@ -17,14 +16,7 @@ await redisClient.connect();
 redisClient.flushDb();
 
 // Suscriber
-const redisSubscriber = createClient({
-  username: "default",
-  password: "2JVwsfLaxIj85crBbm3XRCSmZcl88Q5h",
-  socket: {
-    host: "redis-14080.c14.us-east-1-3.ec2.redns.redis-cloud.com",
-    port: 14080,
-  },
-});
+const redisSubscriber = createClient(config);
 redisSubscriber.on("error", (err) =>
   console.log("Redis Subscriber Error", err)
 );
@@ -32,14 +24,7 @@ redisSubscriber.on("ready", () => console.log("Redis Subscriber Ready"));
 await redisSubscriber.connect();
 
 // Publisher
-const redisPublisher = createClient({
-  username: "default",
-  password: "2JVwsfLaxIj85crBbm3XRCSmZcl88Q5h",
-  socket: {
-    host: "redis-14080.c14.us-east-1-3.ec2.redns.redis-cloud.com",
-    port: 14080,
-  },
-});
+const redisPublisher = createClient(config);
 redisPublisher.on("error", (err) => console.log("Redis Publisher Error", err));
 redisPublisher.on("ready", () => console.log("Redis Publisher Ready"));
 await redisPublisher.connect();
