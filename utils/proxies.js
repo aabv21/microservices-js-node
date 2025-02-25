@@ -21,6 +21,6 @@ const userProxy = new Proxy(data, {
   },
 });
 
-console.log(userProxy.email);
-userProxy.email = "john@example.com";
-console.log(userProxy.email);
+// console.log(userProxy.email);
+// userProxy.email = "john@example.com";
+// console.log(userProxy.email);

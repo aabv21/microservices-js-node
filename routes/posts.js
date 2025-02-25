@@ -11,13 +11,15 @@ import {
 
 // Middlewares
 import { isLoggedIn } from "./middlewares/isLoggedIn.js";
+import { cachedContent } from "./middlewares/cachedContent.js";
+import { cachedDelete } from "./middlewares/cachedDelete.js";
 
 const router = Router();
 
 router.get("/", isLoggedIn, getPosts);
-router.get("/:id", isLoggedIn, getPost);
+router.get("/:id", isLoggedIn, cachedContent, getPost);
 router.post("/", isLoggedIn, createPost);
-router.put("/:id", isLoggedIn, updatePost);
-router.delete("/:id", isLoggedIn, deletePost);
+router.put("/:id", isLoggedIn, cachedDelete, updatePost);
+router.delete("/:id", isLoggedIn, cachedDelete, deletePost);
 
 export default router;

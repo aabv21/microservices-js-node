@@ -1,5 +1,10 @@
 import { Router } from "express";
+
+// Middlewares
 import { canAccess } from "./middlewares/canAccess.js";
+import validateUser from "./middlewares/validateUser.js";
+
+// Controllers
 import {
   getUsers,
   getUser,

@@ -14,6 +14,7 @@ import "./utils/proxies.js";
 
 // import config
 import "./config/mongo.js";
+import "./config/redis.js";
 
 // Rate Limiter
 const limiter = rateLimit({

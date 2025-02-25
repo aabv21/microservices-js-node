@@ -33,6 +33,7 @@ userSchema.pre("save", function (next) {
 });
 
 const User = mongoose.model("User", userSchema);
+
 User.ensureIndexes();
 User.syncIndexes();
 

@@ -25,6 +25,8 @@ commentSchema.post("save", async function (doc) {
   });
 });
 
+const Comment = mongoose.model("Comment", commentSchema);
+
 Comment.ensureIndexes();
 Comment.syncIndexes();
 

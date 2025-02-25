@@ -1,5 +1,13 @@
 // Models
-import Post from "../models/post.js";
+import Post from "../models/posts.js";
+
+// Redis
+import { redisClient, redisSubscriber } from "../config/redis.js";
+
+await redisSubscriber.subscribe("delete-cache", async (message) => {
+  console.log(` ${message} was deleted successfully from cache`);
+  await redisClient.del(message);
+});
 
 /**
  * @async
@@ -15,8 +23,8 @@ export const getPost = async (req, res) => {
   try {
     const id = req.params.id;
     const filter = req.user ? { _id: id } : { _id: id, public: true };
-    const post = await Post.findOne(filter).populate("comments");
 
+    const post = await Post.findOne(filter).populate("comments");
     if (!post) {
       return res.status(404).json({
         success: false,
@@ -24,6 +32,9 @@ export const getPost = async (req, res) => {
         method: "GET",
       });
     }
+
+    // Cache the post
+    await redisClient.setEx(`cache:posts:${id}`, 60, JSON.stringify(post));
 
     res.status(200).json({
       success: true,
@@ -49,17 +60,31 @@ export const getPost = async (req, res) => {
  */
 export const getPosts = async (req, res) => {
   try {
+    // Get the posts from the cache
+    const route = `cache:posts:${req.originalUrl}`;
+    const cachedPosts = await redisClient.get(route);
+    if (cachedPosts) {
+      const result = JSON.parse(cachedPosts);
+      return res.status(200).json({
+        success: true,
+        cached: true,
+        posts: result,
+        size: result.length,
+        msg: "Posts fetched successfully from cache",
+        method: "GET",
+      });
+    }
+
     // Filter is like a WHERE clause in SQL
     // Projection is like a SELECT clause in SQL
     // Sort is like a ORDER BY clause in SQL
     // Pagination is like a LIMIT clause in SQL
-
     const filter = req.user ? {} : { public: true };
     const { limit = 0, sort = "_id", skip = 0 } = req.query;
-    const posts = await Post.find(filter)
-      .sort({ createdAt: -1 })
-      .skip(+skip)
-      .limit(+limit);
+    const posts = await Post.find(filter).sort(sort).skip(+skip).limit(+limit);
+
+    // Cache the posts
+    await redisClient.setEx(route, 60, JSON.stringify(posts));
 
     res.status(200).json({
       success: true,
