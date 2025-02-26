@@ -16,18 +16,18 @@ export const isLoggedIn = async (req, res, next) => {
 
   try {
     const isValid = jwt.verify(token, process.env.JWT_SECRET);
-    if (!isValid) {
-      return res.status(401).json({
-        success: false,
-        msg: "Invalid token",
-        method: "GET",
-      });
+    const user = await redisClient.hGetAll(`session:users:${isValid.id}`);
+    if (token === user.token) {
+      req.user = user;
+      next();
+    } else {
+      throw new Error("Invalid token");
     }
-
-    const user = await User.findById(isValid.id);
-    req.user = user;
   } catch (error) {
-    console.warn(error);
+    error.status = 401;
+    error.message = `Unauthorized: ${error.message}`;
+    res.set({ mdw: "isLoggedIn" });
+    next(error);
   } finally {
     next();
   }

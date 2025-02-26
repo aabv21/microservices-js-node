@@ -5,10 +5,11 @@ import passCrypt from "../utils/passCrypt.js";
 
 // models
 import User from "../models/users.js";
+import { redisClient } from "../config/redis.js";
 
 export const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-    expiresIn: "1h",
+    expiresIn: "30d",
   });
 };
 
@@ -33,7 +34,7 @@ export const login = async (req, res) => {
   }
 
   try {
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email }).select("+password +email");
 
     // check if user exists
     if (!user) {
@@ -56,6 +57,18 @@ export const login = async (req, res) => {
 
     // generate token
     const token = generateToken(user._id);
+
+    // cache user
+    const sessionData = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isModerator: user.isModerator,
+      role: user.role,
+      token,
+    };
+    await redisClient.hSet(`session:users:${user._id}`, sessionData);
+    await redisClient.expire(`session:users:${user._id}`, 60 * 60 * 24 * 7);
 
     res.status(200).json({
       success: true,
