@@ -4,4 +4,12 @@ export default {
   globalTeardown: "<rootDir>/jest.globalTeardown.js",
   testEnvironment: "node",
   transform: {},
+  testTimeout: 10000,
+  moduleDirectories: ["node_modules", "<rootDir>"],
+  // testMatch: ["<rootDir>/tests/**/*.test.js"],
+  // testMatch: ["<rootDir>/tests/controllers/auth.test.js"],
+  // testPathIgnorePatterns: ["<rootDir>/tests/controllers/posts.test.js"],
+  // testMatch: ["<rootDir>/tests/controllers/posts.test.js"],
+  // testMatch: ["<rootDir>/tests/controllers/users.test.js"],
+  testMatch: ["<rootDir>/tests/routes/middlewares/validUser.test.js"],
 };
