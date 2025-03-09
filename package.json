@@ -8,12 +8,13 @@
     "start": "pm2 start ecosystem.config.cjs",
     "dev": "pm2 start ecosystem.config.cjs --env development",
     "prod": "pm2 start ecosystem.config.cjs --env production",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "test:auth": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/auth.test.js",
-    "test:user": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/user.test.js",
-    "test:post": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/post.test.js",
-    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
-    "test:debug": "node --experimental-vm-modules node_modules/jest/bin/jest.js test"
+    "test": "node --env-file=.env --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+    "test:auth": "node --env-file=.env --experimental-vm-modules node_modules/jest/bin/jest.js tests/auth.test.js",
+    "test:user": "node --env-file=.env --experimental-vm-modules node_modules/jest/bin/jest.js tests/user.test.js",
+    "test:post": "node --env-file=.env --experimental-vm-modules node_modules/jest/bin/jest.js tests/post.test.js",
+    "test:watch": "node --env-file=.env --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+    "test:debug": "node --env-file=.env --experimental-vm-modules node_modules/jest/bin/jest.js test",
+    "ci-test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
