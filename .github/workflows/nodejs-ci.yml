@@ -13,7 +13,7 @@ jobs:
       PORT: 3000
       EXPIRES_IN: "7d"
       REDIS_PORT: 14080
-      MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      MONGO_URI: ${{ secrets.MONGODB_URI }}
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
       REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
       REDIS_HOST: ${{ secrets.REDIS_HOST }}

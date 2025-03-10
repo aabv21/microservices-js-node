@@ -5,9 +5,9 @@
   "main": "ecosystem.config.cjs",
   "type": "module",
   "scripts": {
-    "start": "pm2 start ecosystem.config.cjs",
-    "dev": "pm2 start ecosystem.config.cjs --env development",
-    "prod": "pm2 start ecosystem.config.cjs --env production",
+    "start": "pm2 start ecosystem.config.cjs && pm2 logs",
+    "dev": "pm2 start ecosystem.config.cjs --env development && pm2 logs",
+    "prod": "pm2 start ecosystem.config.cjs --env production && pm2 logs",
     "test": "node --env-file=.env --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
     "test:auth": "node --env-file=.env --experimental-vm-modules node_modules/jest/bin/jest.js tests/auth.test.js",
     "test:user": "node --env-file=.env --experimental-vm-modules node_modules/jest/bin/jest.js tests/user.test.js",
