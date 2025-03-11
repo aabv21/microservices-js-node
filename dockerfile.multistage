@@ -1,6 +1,9 @@
 # Base image of the application
-FROM node:20-alpine
+FROM node:20-alpine as prod
 LABEL maintainer="andres.buelvas.2102@gmail.com"
+
+# Environment variables
+ENV LOG=XXXXXXXXX
 
 # Set the working directory
 WORKDIR /app
@@ -9,7 +12,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 
 # Install the dependencies
-RUN npm ci
+RUN npm ci --only=production
 
 # Copy the rest of the application
 COPY . .
@@ -19,3 +22,14 @@ EXPOSE 3000
 
 # Start the application
 CMD ["npm", "start"]
+
+# Development image
+FROM prod as dev
+ENV LOG=YYYYYYYY
+RUN npm ci --only=development
+CMD ["node", "app.js"]
+
+# Test image
+FROM dev as test
+ENV LOG=ZZZZZZZZ
+CMD ["npm", "test"]
