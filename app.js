@@ -40,6 +40,27 @@ import commentsRoutes from "./routes/comments.js";
 import usersRoutes from "./routes/users.js";
 import authRoutes from "./routes/auth.js";
 
+app.get("/", (req, res) => {
+  const randomNumber = Math.floor(Math.random() * 1000);
+  res.send(`
+    <html>
+      <head>
+        <title>Mini Blog API</title>
+        <style>
+          body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+          h1 { color: #333; }
+          .number { font-size: 24px; color: #007bff; margin: 20px 0; }
+        </style>
+      </head>
+      <body>
+        <h1>Mini Blog API is Running!</h1>
+        <p>Server is up and running on port ${process.env.PORT}</p>
+        <div class="number">Random Number: ${randomNumber}</div>
+      </body>
+    </html>
+  `);
+});
+
 // Router
 app.use("/api/v1/posts", postsRoutes);
 app.use("/api/v1/comments", commentsRoutes);

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mini-blog-config
+  namespace: mini-blog
+data:
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  EXPIRES_IN: "7d"
+  MONGO_URI: "mongodb://mongo:27017/blog"
