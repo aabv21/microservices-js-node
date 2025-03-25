@@ -15,7 +15,7 @@ import "./utils/proxies.js";
 // import config
 import "./config/mongo.js";
 import "./config/redis.js";
-
+import "./config/kafka.js";
 // Rate Limiter
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
