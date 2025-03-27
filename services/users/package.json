@@ -1,0 +1,40 @@
+{
+  "name": "master-miscroservices-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ecosystem.config.cjs",
+  "type": "module",
+  "scripts": {
+    "start": "pm2 start ecosystem.config.cjs && pm2 logs",
+    "dev": "pm2 start ecosystem.config.cjs --env development && pm2 logs",
+    "prod": "pm2 start ecosystem.config.cjs --env production && pm2 logs",
+    "test": "node --env-file=.env --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+    "test:auth": "node --env-file=.env --experimental-vm-modules node_modules/jest/bin/jest.js tests/auth.test.js",
+    "test:user": "node --env-file=.env --experimental-vm-modules node_modules/jest/bin/jest.js tests/user.test.js",
+    "test:post": "node --env-file=.env --experimental-vm-modules node_modules/jest/bin/jest.js tests/post.test.js",
+    "test:watch": "node --env-file=.env --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+    "test:debug": "node --env-file=.env --experimental-vm-modules node_modules/jest/bin/jest.js test",
+    "ci-test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.5.0",
+    "jsonwebtoken": "^9.0.2",
+    "kafkajs": "^2.2.4",
+    "mongodb": "^6.13.0",
+    "mongoose": "^8.10.0",
+    "nodemon": "^3.1.1",
+    "pm2": "^5.3.0",
+    "redis": "^4.7.0",
+    "supertest": "^7.0.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv": "^16.4.7",
+    "jest": "^29.7.0",
+    "puppeteer": "^24.3.0"
+  }
+}
