@@ -23,5 +23,17 @@ services:
     ports:
       - 6379:6379
 
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper-db
+    ports:
+      - 2181:2181
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka-db
+    ports:
+      - 9092:9092
+
 volumes:
   mongo_disk:
